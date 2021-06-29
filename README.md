@@ -33,16 +33,16 @@ Path: /api/alpha
 ```
 
 `POST`: Request body format
-```json
+```typescript
 {
     symbolList: string[];
-    window: number,
-    nodes: string[],
-    setupOPs: any[],
-    predictOPs: any[],
-    updateOPs: any[],
-    operandsValues: any,
-    name?: string,
+    window: number;
+    nodes: string[];
+    setupOPs: any[];
+    predictOPs: any[];
+    updateOPs: any[];
+    operandsValues: any;
+    name?: string;
 }
 ```
 
