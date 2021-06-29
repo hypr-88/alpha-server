@@ -3,6 +3,7 @@
 API:
 
 Path: /api/alpha
+Authorization: Add 'Token: q0hcdABLUhGAzW3j' to request header
 
 `GET`: Optional param: name, id. If not specified return all
 
