@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express';
 import {json} from 'body-parser';
 import mongoose from 'mongoose';
 import Alpha from "./models/Alpha";
+import withAuth from "./middleware";
 
 //connect app to mongoDB
 mongoose.Promise = global.Promise;
@@ -16,17 +17,10 @@ mongoose.connect('mongodb://localhost:27017/db').then(
 
 const app = express();
 const port = 3000;
-const TOKEN = "q0hcdABLUhGAzW3j";
 
-app.use(json())
+app.use(json({limit: "50mb"}))
 
-app.post('/api/alpha', async (req: Request, res: Response) => {
-    const { token } = req.headers;
-
-    if (!token || token != TOKEN) {
-        res.status(401).json({"err": "Permission denied", "status": false});
-    }
-
+app.post('/api/alpha', withAuth, async (req: Request, res: Response) => {
     const {symbolList, window, nodes, setupOPs, predictOPs, updateOPs, operandsValues, name} = req.body;
 
     if (!symbolList || !nodes || !setupOPs || !predictOPs || !updateOPs || !operandsValues) {
@@ -54,14 +48,8 @@ app.post('/api/alpha', async (req: Request, res: Response) => {
     }
 });
 
-app.get('/api/alpha', async (req: Request, res: Response) => {
-    const { token } = req.headers;
+app.get('/api/alpha', withAuth, async (req: Request, res: Response) => {
     const { id, name } = req.query;
-
-    if (!token || token != TOKEN) {
-        res.status(401).json({"err": "Permission denied", "status": false});
-        return
-    }
 
     if (id && typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/)) {
         try {
@@ -94,14 +82,8 @@ app.get('/api/alpha', async (req: Request, res: Response) => {
     }
 });
 
-app.delete('/api/alpha', async (req: Request, res: Response) => {
-    const { token } = req.headers;
+app.delete('/api/alpha', withAuth, async (req: Request, res: Response) => {
     const { id, name } = req.query;
-
-    if (!token || token != TOKEN) {
-        res.status(401).json({"err": "Permission denied", "status": false});
-        return
-    }
 
     if (id && typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/)) {
         try {
